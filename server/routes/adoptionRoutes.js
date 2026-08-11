@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const protect = require("../middleware/authMiddleware");
+
 const {
   createAdoptionRequest,
   getAdoptionRequests,
@@ -10,18 +12,18 @@ const {
 } = require("../controllers/adoptionController");
 
 // Create adoption request
-router.post("/", createAdoptionRequest);
+router.post("/", protect, createAdoptionRequest);
 
 // Get all adoption requests
-router.get("/", getAdoptionRequests);
+router.get("/", protect, getAdoptionRequests);
 
 // Get adoption request by ID
-router.get("/:id", getAdoptionRequestById);
+router.get("/:id", protect, getAdoptionRequestById);
 
 // Update adoption status
-router.put("/:id/status", updateAdoptionStatus);
+router.put("/:id/status", protect, updateAdoptionStatus);
 
 // Delete adoption request
-router.delete("/:id", deleteAdoptionRequest);
+router.delete("/:id", protect, deleteAdoptionRequest);
 
 module.exports = router;
