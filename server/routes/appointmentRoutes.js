@@ -8,20 +8,11 @@ const {
   updateAppointmentStatus,
   deleteAppointment,
 } = require("../controllers/appointmentController");
-
-// Create appointment
-router.post("/", createAppointment);
-
-// Get all appointments
-router.get("/", getAppointments);
-
-// Get appointment by ID
-router.get("/:id", getAppointmentById);
-
-// Update appointment status
-router.put("/:id/status", updateAppointmentStatus);
-
-// Delete appointment
-router.delete("/:id", deleteAppointment);
+const protect = require("../middleware/authMiddleware");
+router.post("/", protect, createAppointment);
+router.get("/", protect, getAppointments);
+router.get("/:id", protect, getAppointmentById);
+router.put("/:id/status", protect, updateAppointmentStatus);
+router.delete("/:id", protect, deleteAppointment);
 
 module.exports = router;

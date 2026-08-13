@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const protect = require("../middleware/authMiddleware");
+
 const {
   createDonation,
   getDonations,
@@ -8,12 +10,12 @@ const {
 } = require("../controllers/donationController");
 
 // Create donation
-router.post("/", createDonation);
+router.post("/", protect, createDonation);
 
 // Get all donations
-router.get("/", getDonations);
+router.get("/", protect, getDonations);
 
 // Get donation by ID
-router.get("/:id", getDonationById);
+router.get("/:id", protect, getDonationById);
 
 module.exports = router;
