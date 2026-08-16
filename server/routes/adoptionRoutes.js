@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
-
+const admin = require("../middleware/adminMiddleware");
 const {
   createAdoptionRequest,
   getAdoptionRequests,
@@ -21,7 +21,7 @@ router.get("/", protect, getAdoptionRequests);
 router.get("/:id", protect, getAdoptionRequestById);
 
 // Update adoption status
-router.put("/:id/status", protect, updateAdoptionStatus);
+router.put("/:id/status", protect, admin, updateAdoptionStatus);
 
 // Delete adoption request
 router.delete("/:id", protect, deleteAdoptionRequest);

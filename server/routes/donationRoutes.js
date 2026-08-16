@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
+const admin = require("../middleware/adminMiddleware");
 
 const {
   createDonation,
@@ -9,13 +10,12 @@ const {
   getDonationById,
 } = require("../controllers/donationController");
 
-// Create donation
+// Logged-in users can create donations
 router.post("/", protect, createDonation);
 
-// Get all donations
-router.get("/", protect, getDonations);
+// Admin only
+router.get("/", protect, admin, getDonations);
 
-// Get donation by ID
-router.get("/:id", protect, getDonationById);
+router.get("/:id", protect, admin, getDonationById);
 
 module.exports = router;
