@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const protect = require("../middleware/authMiddleware");
+const admin = require("../middleware/adminMiddleware");
+
 const {
   createAppointment,
   getAppointments,
@@ -9,19 +12,16 @@ const {
   deleteAppointment,
 } = require("../controllers/appointmentController");
 
-// Create appointment
-router.post("/", createAppointment);
+// Logged-in users can create appointments
+router.post("/", protect, createAppointment);
 
-// Get all appointments
-router.get("/", getAppointments);
+// Admin only
+router.get("/", protect, admin, getAppointments);
 
-// Get appointment by ID
-router.get("/:id", getAppointmentById);
+router.get("/:id", protect, admin, getAppointmentById);
 
-// Update appointment status
-router.put("/:id/status", updateAppointmentStatus);
+router.put("/:id/status", protect, admin, updateAppointmentStatus);
 
-// Delete appointment
-router.delete("/:id", deleteAppointment);
+router.delete("/:id", protect, admin, deleteAppointment);
 
 module.exports = router;
