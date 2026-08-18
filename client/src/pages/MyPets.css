@@ -1,0 +1,287 @@
+/* ================================
+   MY PETS PAGE
+================================ */
+
+.my-pets-page {
+  min-height: 100vh;
+  background: #f8f4ef;
+  padding: 40px 7%;
+  color: #292929;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* ================================
+   BACK BUTTON
+================================ */
+
+.back-button {
+  border: none;
+  background: transparent;
+  color: #8b5e3c;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 35px;
+  transition: 0.2s ease;
+}
+
+.back-button:hover {
+  color: #5f3d27;
+  transform: translateX(-3px);
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.my-pets-header {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.my-pets-header span {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.my-pets-header h1 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 800;
+  color: #292929;
+}
+
+.my-pets-header p {
+  margin-top: 10px;
+  font-size: 17px;
+  color: #777;
+}
+
+/* ================================
+   MESSAGE
+================================ */
+
+.my-pets-message {
+  max-width: 700px;
+  margin: 0 auto 25px;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: #fff0f0;
+  color: #c0392b;
+  text-align: center;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-pets {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 65px 40px;
+  background: white;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(70, 50, 35, 0.10);
+}
+
+.empty-icon {
+  font-size: 55px;
+  margin-bottom: 15px;
+}
+
+.empty-pets h2 {
+  margin: 0;
+  font-size: 30px;
+  color: #333;
+}
+
+.empty-pets p {
+  margin: 12px 0 25px;
+  color: #777;
+  font-size: 17px;
+}
+
+.empty-pets button {
+  border: none;
+  background: #8b5e3c;
+  color: white;
+  padding: 13px 28px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.empty-pets button:hover {
+  background: #70482e;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 15px rgba(112, 72, 46, 0.25);
+}
+
+/* ================================
+   PET GRID
+================================ */
+
+.pets-grid {
+  max-width: 1150px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* ================================
+   PET CARD
+================================ */
+
+.pet-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(70, 50, 35, 0.10);
+  transition: 0.25s ease;
+}
+
+.pet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 35px rgba(70, 50, 35, 0.16);
+}
+
+/* ================================
+   PET IMAGE
+================================ */
+
+.pet-image {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ================================
+   PET CONTENT
+================================ */
+
+.pet-content {
+  padding: 24px;
+}
+
+.pet-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.pet-title h2 {
+  margin: 0;
+  font-size: 25px;
+  color: #292929;
+}
+
+/* ================================
+   STATUS
+================================ */
+
+.pet-status {
+  padding: 6px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.pet-status.available {
+  background: #e7f7ed;
+  color: #218c4b;
+}
+
+.pet-status.pending {
+  background: #fff4d6;
+  color: #a56a00;
+}
+
+.pet-status.adopted {
+  background: #fce5e5;
+  color: #c0392b;
+}
+
+/* ================================
+   PET DETAILS
+================================ */
+
+.pet-content p {
+  margin: 10px 0;
+  font-size: 15px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.pet-content strong {
+  color: #333;
+}
+
+.pet-description {
+  margin-top: 18px !important;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+  color: #777 !important;
+}
+
+/* ================================
+   LOADING
+================================ */
+
+.my-pets-page.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 1000px) {
+  .pets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .my-pets-header h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 650px) {
+  .my-pets-page {
+    padding: 25px 20px;
+  }
+
+  .my-pets-header h1 {
+    font-size: 30px;
+  }
+
+  .my-pets-header p {
+    font-size: 15px;
+  }
+
+  .pets-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .empty-pets {
+    padding: 45px 20px;
+  }
+
+  .empty-pets h2 {
+    font-size: 25px;
+  }
+}

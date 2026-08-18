@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -5,35 +6,46 @@ function Home() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
     <div className="home-page">
-      {/* Navbar */}
+      {/* ================= NAVBAR ================= */}
       <nav className="navbar">
-        <div className="logo">🐾 PawConnect</div>
+        <div className="logo" onClick={() => navigate("/home")}>
+          🐾 PawConnect
+        </div>
 
         <div className="nav-links">
           <span onClick={() => navigate("/home")}>Home</span>
 
-          <span onClick={() => navigate("/pets")}>Pets</span>
+          <span onClick={() => navigate("/pets")}>Find Pets</span>
 
-          <span>Adoption</span>
+          <span onClick={() => navigate("/my-pets")}>My Pets</span>
 
-          <span>Donations</span>
+          <span onClick={() => navigate("/my-adoptions")}>My Requests</span>
 
-          <span>Appointments</span>
+          <span onClick={() => navigate("/donations")}>Donations</span>
 
-          <button onClick={handleLogout}>Logout</button>
-          <button onClick={() => navigate("/add-pet")}>
+          <span onClick={() => navigate("/profile")}>👤 Profile</span>
+
+          <button className="logout-button" onClick={handleLogout}>
+            Logout
+          </button>
+
+          <button
+            className="add-pet-button"
+            onClick={() => navigate("/add-pet")}
+          >
             ❤️ Put My Pet Up for Adoption
           </button>
         </div>
       </nav>
 
-      {/* Main content */}
+      {/* ================= MAIN CONTENT ================= */}
       <main className="home-content">
+        {/* ================= HERO ================= */}
         <section className="hero">
           <h1>Welcome to PawConnect 🐾</h1>
 
@@ -42,36 +54,53 @@ function Home() {
           </p>
 
           <div className="hero-buttons">
-            <button onClick={() => navigate("/pets")}>Find a Pet</button>
+            <button onClick={() => navigate("/pets")}>🐶 Find a Pet</button>
 
-            <button onClick={() => navigate("/pets")}>Adopt a Pet</button>
+            <button onClick={() => navigate("/add-pet")}>
+              ❤️ Put My Pet Up for Adoption
+            </button>
           </div>
         </section>
 
-        {/* Features */}
+        {/* ================= FEATURES ================= */}
         <section className="features">
+          {/* Find Pets */}
           <div className="feature-card" onClick={() => navigate("/pets")}>
-            <div>🐶</div>
+            <div className="feature-icon">🐶</div>
+
             <h2>Find Pets</h2>
+
             <p>Discover pets looking for a loving home.</p>
           </div>
 
-          <div className="feature-card">
-            <div>🏡</div>
-            <h2>Adoption</h2>
-            <p>Give a pet a safe and happy forever home.</p>
+          {/* My Pets */}
+          <div className="feature-card" onClick={() => navigate("/my-pets")}>
+            <div className="feature-icon">🐾</div>
+
+            <h2>My Pets</h2>
+
+            <p>View and manage the pets you have added.</p>
           </div>
 
-          <div className="feature-card">
-            <div>❤️</div>
-            <h2>Donate</h2>
-            <p>Support animals that need care and treatment.</p>
+          {/* My Adoption Requests */}
+          <div
+            className="feature-card"
+            onClick={() => navigate("/my-adoptions")}
+          >
+            <div className="feature-icon">❤️</div>
+
+            <h2>My Adoption Requests</h2>
+
+            <p>Track the pets you have requested to adopt.</p>
           </div>
 
-          <div className="feature-card">
-            <div>📅</div>
-            <h2>Appointments</h2>
-            <p>Book appointments for your pets easily.</p>
+          {/* Donations */}
+          <div className="feature-card" onClick={() => navigate("/donations")}>
+            <div className="feature-icon">💝</div>
+
+            <h2>Support Animal Welfare</h2>
+
+            <p>Support real organizations helping animals in need.</p>
           </div>
         </section>
       </main>

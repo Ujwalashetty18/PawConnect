@@ -1,0 +1,231 @@
+/* ===============================
+   ADMIN ADOPTIONS PAGE
+================================ */
+
+.admin-adoptions-page {
+  min-height: 100vh;
+  padding: 30px 50px;
+  background: #faf7f2;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* ===============================
+   BACK BUTTON
+================================ */
+
+.back-button {
+  border: none;
+  background: transparent;
+  color: #8b5e3c;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+.back-button:hover {
+  color: #5f3d26;
+}
+
+/* ===============================
+   HEADER
+================================ */
+
+.admin-adoptions-header {
+  margin-bottom: 30px;
+}
+
+.admin-adoptions-header h1 {
+  font-size: 36px;
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.admin-adoptions-header p {
+  font-size: 17px;
+  color: #666;
+  margin: 0;
+}
+
+/* ===============================
+   MESSAGE
+================================ */
+
+.admin-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* ===============================
+   EMPTY
+================================ */
+
+.empty-requests {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* ===============================
+   REQUEST CONTAINER
+================================ */
+
+.requests-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+}
+
+/* ===============================
+   REQUEST CARD
+================================ */
+
+.adoption-request-card {
+  background: white;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eee;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.adoption-request-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* ===============================
+   REQUEST HEADER
+================================ */
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.request-header h2 {
+  margin: 0 0 10px;
+  font-size: 25px;
+  color: #3d3d3d;
+}
+
+/* ===============================
+   STATUS
+================================ */
+
+.status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ===============================
+   DETAILS
+================================ */
+
+.request-details {
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.request-details p {
+  margin: 10px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.request-details strong {
+  color: #555;
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+
+.request-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.approve-button,
+.reject-button {
+  flex: 1;
+  border: none;
+  padding: 11px 15px;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.approve-button {
+  background: #4caf50;
+  color: white;
+}
+
+.approve-button:hover {
+  background: #388e3c;
+}
+
+.reject-button {
+  background: #e53935;
+  color: white;
+}
+
+.reject-button:hover {
+  background: #c62828;
+}
+
+/* ===============================
+   LOADING
+================================ */
+
+.admin-adoptions-page h2 {
+  color: #444;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+
+@media (max-width: 700px) {
+  .admin-adoptions-page {
+    padding: 20px;
+  }
+
+  .admin-adoptions-header h1 {
+    font-size: 28px;
+  }
+
+  .requests-container {
+    grid-template-columns: 1fr;
+  }
+}
