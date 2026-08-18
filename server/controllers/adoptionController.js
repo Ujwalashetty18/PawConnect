@@ -1,27 +1,48 @@
 const AdoptionRequest = require("../models/AdoptionRequest");
+const Pet = require("../models/Pet");
 
 // ================= CREATE ADOPTION REQUEST =================
 exports.createAdoptionRequest = async (req, res) => {
   try {
-    const { applicantName, email, phone, petId, petName, address, reason } =
-      req.body;
+    const { applicantName, email, phone, petId, address, reason } = req.body;
 
-    const request = await AdoptionRequest.create({
+    // Check required fields
+    if (!applicantName || !email || !phone || !petId || !address || !reason) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all required fields",
+      });
+    }
+
+    // Check whether pet exists
+    const pet = await Pet.findById(petId);
+
+    if (!pet) {
+      return res.status(404).json({
+        success: false,
+        message: "Pet not found",
+      });
+    }
+
+    // Create adoption request
+    const adoptionRequest = await AdoptionRequest.create({
       applicantName,
       email,
       phone,
-      petId,
-      petName,
+      petId: pet._id,
+      petName: pet.name,
       address,
       reason,
     });
 
     res.status(201).json({
       success: true,
-      message: "Adoption Request Submitted Successfully",
-      request,
+      message: "Adoption request submitted successfully",
+      adoptionRequest,
     });
   } catch (error) {
+    console.error("Create adoption request error:", error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -49,7 +70,7 @@ exports.getAdoptionRequests = async (req, res) => {
   }
 };
 
-// ================= GET REQUEST BY ID =================
+// ================= GET SINGLE REQUEST =================
 exports.getAdoptionRequestById = async (req, res) => {
   try {
     const request = await AdoptionRequest.findById(req.params.id).populate(
@@ -59,7 +80,7 @@ exports.getAdoptionRequestById = async (req, res) => {
     if (!request) {
       return res.status(404).json({
         success: false,
-        message: "Adoption Request not found",
+        message: "Adoption request not found",
       });
     }
 
@@ -75,10 +96,17 @@ exports.getAdoptionRequestById = async (req, res) => {
   }
 };
 
-// ================= UPDATE REQUEST STATUS =================
+// ================= UPDATE STATUS =================
 exports.updateAdoptionStatus = async (req, res) => {
   try {
     const { status } = req.body;
+
+    if (!["Pending", "Approved", "Rejected"].includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status",
+      });
+    }
 
     const request = await AdoptionRequest.findByIdAndUpdate(
       req.params.id,
@@ -87,43 +115,19 @@ exports.updateAdoptionStatus = async (req, res) => {
         new: true,
         runValidators: true,
       },
-    ).populate("petId");
+    );
 
     if (!request) {
       return res.status(404).json({
         success: false,
-        message: "Adoption Request not found",
+        message: "Adoption request not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Adoption Request Status Updated Successfully",
+      message: `Adoption request ${status}`,
       request,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
-// ================= DELETE REQUEST =================
-exports.deleteAdoptionRequest = async (req, res) => {
-  try {
-    const request = await AdoptionRequest.findByIdAndDelete(req.params.id);
-
-    if (!request) {
-      return res.status(404).json({
-        success: false,
-        message: "Adoption Request not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "Adoption Request Deleted Successfully",
     });
   } catch (error) {
     res.status(500).json({
