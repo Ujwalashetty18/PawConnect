@@ -48,6 +48,20 @@ const petSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    // User who owns this pet/listing
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    // Adoption status
+    status: {
+      type: String,
+      enum: ["available", "pending", "adopted"],
+      default: "available",
+    },
   },
   {
     timestamps: true,

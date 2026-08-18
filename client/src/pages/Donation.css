@@ -1,0 +1,447 @@
+/* ========================================
+   DONATION PAGE
+======================================== */
+
+.donation-page {
+  min-height: 100vh;
+  background: #faf7f3;
+  color: #292929;
+  padding: 35px 7%;
+  font-family: Arial, sans-serif;
+}
+
+
+/* ========================================
+   BACK BUTTON
+======================================== */
+
+.donation-back {
+  border: none;
+  background: transparent;
+  color: #805536;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 35px;
+  transition: 0.2s ease;
+}
+
+.donation-back:hover {
+  color: #5e3d27;
+  transform: translateX(-4px);
+}
+
+
+/* ========================================
+   HERO
+======================================== */
+
+.donation-hero {
+  max-width: 850px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.donation-paw {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #ead8c7;
+
+  font-size: 34px;
+}
+
+.donation-hero h1 {
+  margin: 0;
+
+  font-size: 46px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.donation-hero > p {
+  max-width: 650px;
+  margin: 15px auto 30px;
+
+  color: #777;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+
+/* ========================================
+   SECURITY NOTE
+======================================== */
+
+.donation-note {
+  max-width: 700px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+
+  padding: 20px 24px;
+
+  background: #fff;
+  border: 1px solid #eadfd5;
+  border-radius: 16px;
+
+  text-align: left;
+
+  box-shadow: 0 8px 25px rgba(70, 50, 35, 0.06);
+}
+
+.donation-note > span {
+  font-size: 25px;
+}
+
+.donation-note strong {
+  display: block;
+  margin-bottom: 5px;
+
+  font-size: 16px;
+}
+
+.donation-note p {
+  margin: 0;
+
+  color: #777;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ========================================
+   ORGANIZATIONS
+======================================== */
+
+.organizations-section {
+  max-width: 1100px;
+  margin: 70px auto 0;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.section-heading h2 {
+  margin: 0;
+
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.section-heading p {
+  margin-top: 9px;
+
+  color: #777;
+  font-size: 16px;
+}
+
+
+/* ========================================
+   ORGANIZATION GRID
+======================================== */
+
+.organization-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+
+/* ========================================
+   ORGANIZATION CARD
+======================================== */
+
+.organization-card {
+  background: #fff;
+
+  border: 1px solid #eee4db;
+  border-radius: 22px;
+
+  padding: 28px;
+
+  box-shadow: 0 10px 30px rgba(70, 50, 35, 0.08);
+
+  transition: 0.25s ease;
+}
+
+.organization-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow: 0 17px 38px rgba(70, 50, 35, 0.13);
+}
+
+
+/* ========================================
+   CARD TOP
+======================================== */
+
+.organization-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+.organization-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 16px;
+
+  background: #f3e7dc;
+
+  font-size: 28px;
+}
+
+.verified-badge {
+  padding: 7px 12px;
+
+  background: #e7f5eb;
+  color: #25824a;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* ========================================
+   CARD CONTENT
+======================================== */
+
+.organization-content h3 {
+  margin: 0;
+
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.organization-location {
+  margin: 8px 0 15px;
+
+  color: #8a654a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.organization-description {
+  min-height: 72px;
+
+  margin: 0;
+
+  color: #666;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* ========================================
+   ACTION BUTTONS
+======================================== */
+
+.organization-actions {
+  display: flex;
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+.website-button,
+.donate-button {
+  flex: 1;
+
+  padding: 13px 16px;
+
+  border-radius: 10px;
+
+  text-align: center;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: 0.2s ease;
+}
+
+.website-button {
+  background: #f3eee9;
+  color: #69472f;
+}
+
+.website-button:hover {
+  background: #e8ded4;
+}
+
+.donate-button {
+  background: #8b5e3c;
+  color: white;
+}
+
+.donate-button:hover {
+  background: #70482e;
+  transform: translateY(-2px);
+}
+
+
+/* ========================================
+   HOW IT WORKS
+======================================== */
+
+.how-section {
+  max-width: 1100px;
+  margin: 80px auto 0;
+
+  text-align: center;
+}
+
+.how-section > h2 {
+  margin-bottom: 30px;
+
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.how-card {
+  padding: 28px 22px;
+
+  background: #fff;
+
+  border: 1px solid #eee4db;
+  border-radius: 18px;
+}
+
+.how-card > div {
+  width: 42px;
+  height: 42px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ead8c7;
+  color: #69472f;
+
+  font-weight: 800;
+}
+
+.how-card h3 {
+  margin: 0 0 8px;
+
+  font-size: 19px;
+}
+
+.how-card p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.donation-footer {
+  max-width: 800px;
+
+  margin: 80px auto 20px;
+  padding: 45px 25px;
+
+  text-align: center;
+
+  background: #ead8c7;
+  border-radius: 24px;
+}
+
+.footer-paw {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.donation-footer h2 {
+  margin: 0;
+
+  font-size: 28px;
+}
+
+.donation-footer p {
+  margin: 10px auto 0;
+
+  color: #6f5846;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 800px) {
+
+  .donation-page {
+    padding: 25px 20px;
+  }
+
+  .donation-hero h1 {
+    font-size: 36px;
+  }
+
+  .organization-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .how-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .donation-hero h1 {
+    font-size: 30px;
+  }
+
+  .donation-hero > p {
+    font-size: 16px;
+  }
+
+  .organization-actions {
+    flex-direction: column;
+  }
+
+  .donation-note {
+    padding: 17px;
+  }
+}

@@ -1,0 +1,943 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f7f3ee;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  text-align: center;
+}
+
+.logo {
+  font-size: 45px;
+  margin-bottom: 10px;
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #5b3a29;
+}
+
+.subtitle {
+  color: #777;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #8b5e3c;
+}
+
+.login-card button {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #8b5e3c;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-card button:hover {
+  background: #70482e;
+}
+
+.register-text {
+  margin-top: 25px;
+  color: #777;
+}
+
+.register-text span {
+  color: #8b5e3c;
+  font-weight: 600;
+  cursor: pointer;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8f4ef;
+  color: #333;
+}
+
+/* Navbar */
+
+.navbar {
+  height: 70px;
+  padding: 0 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: #70462c;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-links span {
+  cursor: pointer;
+}
+
+.nav-links span:hover {
+  color: #9a623c;
+}
+
+.nav-links button {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #8f603b;
+  color: white;
+  cursor: pointer;
+}
+
+.nav-links button:hover {
+  background: #70462c;
+}
+
+/* Main */
+
+.home-content {
+  padding: 60px;
+}
+
+/* Hero */
+
+.hero {
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 15px;
+  color: #70462c;
+}
+
+.hero p {
+  font-size: 20px;
+  color: #666;
+  max-width: 650px;
+  margin: 0 auto 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.hero-buttons button {
+  padding: 13px 25px;
+  border: none;
+  border-radius: 7px;
+  background: #8f603b;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hero-buttons button:hover {
+  background: #70462c;
+}
+
+/* Feature cards */
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: white;
+  padding: 30px;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card > div {
+  font-size: 40px;
+}
+
+.feature-card h2 {
+  color: #70462c;
+}
+
+.feature-card p {
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Mobile */
+
+@media (max-width: 900px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-links {
+    gap: 10px;
+  }
+
+  .navbar {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    height: auto;
+    padding: 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .home-content {
+    padding: 30px 15px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
+.pets-page {
+  min-height: 100vh;
+  padding: 40px;
+  background: #faf7f2;
+}
+
+.pets-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.pets-header h1 {
+  font-size: 36px;
+  color: #5b3825;
+  margin-bottom: 8px;
+}
+
+.pets-header p {
+  color: #777;
+  font-size: 18px;
+}
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.pet-card {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.pet-card:hover {
+  transform: translateY(-5px);
+}
+
+.pet-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.pet-image-placeholder {
+  width: 100%;
+  height: 220px;
+  background: #eee3d7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 70px;
+}
+
+.pet-info {
+  padding: 22px;
+}
+
+.pet-info h2 {
+  margin: 0;
+  font-size: 25px;
+  color: #5b3825;
+}
+
+.pet-breed {
+  color: #8d6344;
+  margin-top: 5px;
+}
+
+.pet-details {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+.pet-description {
+  color: #666;
+  line-height: 1.5;
+}
+
+.pet-info button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #93613d;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.pet-info button:hover {
+  background: #74482d;
+}
+/* ================= PET DETAILS ================= */
+
+.pet-details-page {
+  min-height: 100vh;
+  background: #faf7f2;
+  padding: 35px 7%;
+}
+
+.back-button {
+  border: none;
+  background: transparent;
+  color: #8b5738;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.back-button:hover {
+  color: #5f3825;
+}
+
+.pet-details-card {
+  max-width: 1100px;
+  margin: auto;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  box-shadow: 0 10px 35px rgba(80, 50, 30, 0.12);
+}
+
+/* IMAGE */
+
+.pet-details-image {
+  min-height: 600px;
+  background: #eee2d3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pet-details-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pet-details-image span {
+  font-size: 130px;
+}
+
+/* INFORMATION */
+
+.pet-details-info {
+  padding: 55px 50px;
+}
+
+.available-label {
+  color: #9a623d;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.pet-details-info h1 {
+  font-size: 48px;
+  color: #5b3828;
+  margin: 0;
+}
+
+.pet-details-info > h3 {
+  color: #a16a46;
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 5px;
+  margin-bottom: 30px;
+}
+
+/* INFO GRID */
+
+.pet-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-item > span {
+  font-size: 25px;
+}
+
+.info-item div {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item small {
+  color: #8a8a8a;
+  font-size: 13px;
+}
+
+.info-item strong {
+  color: #3f3f3f;
+  font-size: 16px;
+}
+
+/* DESCRIPTION */
+
+.description-box {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid #eee;
+}
+
+.description-box h3 {
+  color: #5b3828;
+  margin-bottom: 8px;
+}
+
+.description-box p {
+  color: #666;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+/* ADOPT BUTTON */
+
+.adopt-button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 25px;
+  border: none;
+  border-radius: 10px;
+  background: #9a623d;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.adopt-button:hover {
+  background: #7c4b2f;
+  transform: translateY(-2px);
+}
+
+/* LOADING / ERROR */
+
+.details-message {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #faf7f2;
+}
+
+.details-message button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #9a623d;
+  color: white;
+  cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+  .pet-details-page {
+    padding: 20px;
+  }
+
+  .pet-details-card {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-details-image {
+    min-height: 350px;
+  }
+
+  .pet-details-info {
+    padding: 35px 25px;
+  }
+
+  .pet-details-info h1 {
+    font-size: 38px;
+  }
+
+  .pet-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ================= ADOPTION PAGE ================= */
+
+.adoption-page {
+  min-height: 100vh;
+  background: #f8f3ed;
+  padding: 30px 6%;
+  box-sizing: border-box;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #8f5d3b;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.adoption-card {
+  max-width: 750px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 35px rgba(80, 50, 30, 0.12);
+}
+
+.adoption-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.adoption-header span {
+  font-size: 45px;
+}
+
+.adoption-header h1 {
+  margin: 10px 0;
+  color: #5d3826;
+  font-size: 38px;
+}
+
+.adoption-header p {
+  color: #777;
+  font-size: 18px;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #5d3826;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #a56a42;
+  box-shadow: 0 0 0 3px rgba(165, 106, 66, 0.12);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.submit-adoption {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #a56a42;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit-adoption:hover {
+  background: #8f5937;
+}
+/* ================= PETS PAGE ================= */
+
+.pets-page {
+  min-height: 100vh;
+  padding: 40px;
+  background: #f8f4ef;
+}
+
+.pets-page > button:first-child {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #7b4b2a;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.pets-page h1 {
+  font-size: 40px;
+  color: #3b2417;
+  margin-bottom: 30px;
+}
+
+/* Grid */
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+/* Card */
+
+.pet-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  padding-bottom: 20px;
+}
+
+/* Image */
+
+.pet-image {
+  width: 100%;
+  height: 280px;
+  background: #f1ebe5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pet-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pet-image span {
+  font-size: 80px;
+}
+
+/* Pet information */
+
+.pet-card h2 {
+  font-size: 26px;
+  color: #3b2417;
+  margin: 18px 20px 5px;
+}
+
+.pet-card p {
+  margin: 6px 20px;
+  color: #666;
+}
+
+/* View Details */
+
+.pet-card button {
+  margin: 15px 20px 0;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #7b4b2a;
+  color: white;
+  cursor: pointer;
+}
+
+.pet-card button:hover {
+  background: #5f371f;
+}
+/* ================================
+   ADD PET PAGE
+================================ */
+
+.add-pet-page {
+  min-height: 100vh;
+  padding: 40px 5%;
+  background: #f8f3ee;
+  color: #3d2417;
+}
+
+.add-pet-page .back-button {
+  background: #8b4f2c;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-bottom: 30px;
+}
+
+.add-pet-page .back-button:hover {
+  background: #713d22;
+}
+
+.add-pet-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.add-pet-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.add-pet-header h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.add-pet-header p {
+  color: #765f50;
+  font-size: 17px;
+}
+
+/* FORM */
+
+.add-pet-form {
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(70, 40, 20, 0.08);
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-section h2 {
+  font-size: 22px;
+  margin-bottom: 18px;
+  color: #5b321f;
+}
+
+/* GRID */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* INPUTS */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #d8c9be;
+  border-radius: 10px;
+  font-size: 15px;
+  background: #fff;
+  color: #3d2417;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #8b4f2c;
+  box-shadow: 0 0 0 3px rgba(139, 79, 44, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-group small {
+  color: #8b776c;
+}
+
+/* CHECKBOX */
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-group input {
+  width: 18px;
+  height: 18px;
+  accent-color: #8b4f2c;
+}
+
+/* FILE */
+
+.form-group input[type="file"] {
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* MESSAGE */
+
+.form-message {
+  margin-bottom: 20px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f4e8df;
+  color: #6b3c23;
+  text-align: center;
+}
+
+/* SUBMIT */
+
+.submit-pet-button {
+  width: 100%;
+  padding: 15px;
+  background: #8b4f2c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit-pet-button:hover {
+  background: #713d22;
+}
+
+.submit-pet-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+  .add-pet-page {
+    padding: 25px 15px;
+  }
+
+  .add-pet-header h1 {
+    font-size: 30px;
+  }
+
+  .add-pet-form {
+    padding: 22px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
