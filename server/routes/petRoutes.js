@@ -1,29 +1,53 @@
 const express = require("express");
+
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
-const admin = require("../middleware/adminMiddleware");
-const upload = require("../middleware/upload");
+const upload = require("../middleware/uploadMiddleware");
 
 const {
   addPet,
   getPets,
+  getMyPets,
   getPetById,
   updatePet,
   deletePet,
 } = require("../controllers/petController");
 
-// Anyone logged in can put their pet up for adoption
+// ========================================
+// ADD PET
+// POST /api/pets
+// ========================================
 router.post("/", protect, upload.single("image"), addPet);
 
-// Anyone logged in can view pets
+// ========================================
+// GET ALL AVAILABLE PETS
+// GET /api/pets
+// ========================================
 router.get("/", protect, getPets);
 
+// ========================================
+// GET MY PETS
+// GET /api/pets/my-pets
+// ========================================
+router.get("/my-pets", protect, getMyPets);
+
+// ========================================
+// GET SINGLE PET
+// GET /api/pets/:id
+// ========================================
 router.get("/:id", protect, getPetById);
 
-// We will fix owner checking later
+// ========================================
+// UPDATE PET
+// PUT /api/pets/:id
+// ========================================
 router.put("/:id", protect, upload.single("image"), updatePet);
 
+// ========================================
+// DELETE PET
+// DELETE /api/pets/:id
+// ========================================
 router.delete("/:id", protect, deletePet);
 
 module.exports = router;

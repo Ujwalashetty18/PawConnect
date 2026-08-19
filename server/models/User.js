@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
+      trim: true,
     },
 
     password: {
@@ -22,6 +23,18 @@ const userSchema = new mongoose.Schema(
 
     phone: {
       type: String,
+      default: "",
+      trim: true,
+    },
+
+    profileImage: {
+      type: String,
+      default: "",
+    },
+
+    notificationsEnabled: {
+      type: Boolean,
+      default: true,
     },
 
     role: {

@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 
 const adoptionRequestSchema = new mongoose.Schema(
   {
+    // Person who wants to adopt
+    applicant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     applicantName: {
       type: String,
       required: true,
@@ -20,6 +27,7 @@ const adoptionRequestSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Pet being requested
     petId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Pet",
@@ -28,6 +36,13 @@ const adoptionRequestSchema = new mongoose.Schema(
 
     petName: {
       type: String,
+      required: true,
+    },
+
+    // Owner of the pet
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
 

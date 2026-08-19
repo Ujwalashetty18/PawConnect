@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 
 const petSchema = new mongoose.Schema(
   {
+    // User who owns/posted the pet
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
     name: {
       type: String,
       required: true,
@@ -29,6 +36,7 @@ const petSchema = new mongoose.Schema(
 
     color: {
       type: String,
+      default: "",
     },
 
     vaccinated: {
@@ -38,22 +46,17 @@ const petSchema = new mongoose.Schema(
 
     description: {
       type: String,
+      default: "",
     },
 
     location: {
       type: String,
+      default: "",
     },
 
     image: {
       type: String,
       default: "",
-    },
-
-    // User who owns this pet/listing
-    owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
     },
 
     // Adoption status

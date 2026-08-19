@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const userRoutes = require("./routes/userRoutes");
 const cors = require("cors");
 const path = require("path");
 
@@ -25,7 +26,7 @@ app.use(express.json());
 // ================= UPLOADS =================
 // Make uploaded pet images accessible
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
+app.use("/api/users", userRoutes);
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 app.use("/api/pets", petRoutes);
