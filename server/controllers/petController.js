@@ -1,6 +1,9 @@
 const Pet = require("../models/Pet");
 
-// ================= ADD PET =================
+// ========================================
+// ADD PET
+// Logged-in user can add their pet
+// ========================================
 exports.addPet = async (req, res) => {
   try {
     const {
@@ -15,37 +18,35 @@ exports.addPet = async (req, res) => {
       location,
     } = req.body;
 
-    // Check required fields
+    // Basic validation
     if (!name || !age || !gender || !breed || !species) {
       return res.status(400).json({
         success: false,
-        message: "Please fill all required fields",
+        message: "Please fill all required pet details",
       });
     }
 
-    // Create pet
     const pet = await Pet.create({
+      owner: req.user._id,
+
       name,
       age,
       gender,
       breed,
       species,
-      color,
-      vaccinated,
-      description,
-      location,
+      color: color || "",
+      vaccinated: vaccinated === true || vaccinated === "true",
+      description: description || "",
+      location: location || "",
+
       image: req.file ? `/uploads/${req.file.filename}` : "",
 
-      // Logged-in user becomes the owner
-      owner: req.user._id,
-
-      // New listing is available for adoption
       status: "available",
     });
 
     res.status(201).json({
       success: true,
-      message: "Pet Added Successfully",
+      message: "Pet added successfully",
       pet,
     });
   } catch (error) {
@@ -58,13 +59,16 @@ exports.addPet = async (req, res) => {
   }
 };
 
-// ================= GET ALL PETS =================
+// ========================================
+// GET ALL AVAILABLE PETS
+// Used by Find Pets
+// ========================================
 exports.getPets = async (req, res) => {
   try {
     const pets = await Pet.find({
-      status: { $ne: "adopted" },
+      status: "available",
     })
-      .populate("owner", "name email")
+      .populate("owner", "fullName email phone")
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -82,12 +86,41 @@ exports.getPets = async (req, res) => {
   }
 };
 
-// ================= GET SINGLE PET =================
+// ========================================
+// GET MY PETS
+// Logged-in user sees only their own pets
+// ========================================
+exports.getMyPets = async (req, res) => {
+  try {
+    const pets = await Pet.find({
+      owner: req.user._id,
+    })
+      .populate("owner", "fullName email phone")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: pets.length,
+      pets,
+    });
+  } catch (error) {
+    console.error("Get my pets error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ========================================
+// GET SINGLE PET
+// ========================================
 exports.getPetById = async (req, res) => {
   try {
     const pet = await Pet.findById(req.params.id).populate(
       "owner",
-      "name email",
+      "fullName email phone",
     );
 
     if (!pet) {
@@ -111,7 +144,10 @@ exports.getPetById = async (req, res) => {
   }
 };
 
-// ================= UPDATE PET =================
+// ========================================
+// UPDATE PET
+// Only owner or admin
+// ========================================
 exports.updatePet = async (req, res) => {
   try {
     const pet = await Pet.findById(req.params.id);
@@ -123,20 +159,18 @@ exports.updatePet = async (req, res) => {
       });
     }
 
-    // Check ownership
-    const isOwner = pet.owner.toString() === req.user.id.toString();
+    const isOwner =
+      pet.owner && pet.owner.toString() === req.user._id.toString();
 
-    // Check admin
     const isAdmin = req.user.role === "admin";
 
     if (!isOwner && !isAdmin) {
       return res.status(403).json({
         success: false,
-        message: "You are not authorized to update this pet",
+        message: "You can only update your own pet listing.",
       });
     }
 
-    // Update fields
     const {
       name,
       age,
@@ -150,22 +184,29 @@ exports.updatePet = async (req, res) => {
       status,
     } = req.body;
 
-    pet.name = name ?? pet.name;
-    pet.age = age ?? pet.age;
-    pet.gender = gender ?? pet.gender;
-    pet.breed = breed ?? pet.breed;
-    pet.species = species ?? pet.species;
-    pet.color = color ?? pet.color;
-    pet.vaccinated = vaccinated ?? pet.vaccinated;
-    pet.description = description ?? pet.description;
-    pet.location = location ?? pet.location;
+    if (name !== undefined) pet.name = name;
+    if (age !== undefined) pet.age = age;
+    if (gender !== undefined) pet.gender = gender;
+    if (breed !== undefined) pet.breed = breed;
+    if (species !== undefined) pet.species = species;
+    if (color !== undefined) pet.color = color;
 
-    // Only allow valid status values
-    if (status && ["available", "pending", "adopted"].includes(status)) {
+    if (vaccinated !== undefined) {
+      pet.vaccinated = vaccinated === true || vaccinated === "true";
+    }
+
+    if (description !== undefined) {
+      pet.description = description;
+    }
+
+    if (location !== undefined) {
+      pet.location = location;
+    }
+
+    if (status !== undefined) {
       pet.status = status;
     }
 
-    // New image if uploaded
     if (req.file) {
       pet.image = `/uploads/${req.file.filename}`;
     }
@@ -174,7 +215,7 @@ exports.updatePet = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Pet Updated Successfully",
+      message: "Pet updated successfully",
       pet,
     });
   } catch (error) {
@@ -187,7 +228,10 @@ exports.updatePet = async (req, res) => {
   }
 };
 
-// ================= DELETE PET =================
+// ========================================
+// DELETE PET
+// Only owner or admin
+// ========================================
 exports.deletePet = async (req, res) => {
   try {
     const pet = await Pet.findById(req.params.id);
@@ -199,16 +243,15 @@ exports.deletePet = async (req, res) => {
       });
     }
 
-    // Check ownership
-    const isOwner = pet.owner.toString() === req.user.id.toString();
+    const isOwner =
+      pet.owner && pet.owner.toString() === req.user._id.toString();
 
-    // Check admin
     const isAdmin = req.user.role === "admin";
 
     if (!isOwner && !isAdmin) {
       return res.status(403).json({
         success: false,
-        message: "You are not authorized to delete this pet",
+        message: "You can only delete your own pet listing.",
       });
     }
 
@@ -216,7 +259,7 @@ exports.deletePet = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Pet Deleted Successfully",
+      message: "Pet deleted successfully",
     });
   } catch (error) {
     console.error("Delete pet error:", error);

@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
-const admin = require("../middleware/adminMiddleware");
 
 const {
   createAdoptionRequest,
@@ -15,13 +14,13 @@ const {
 // User submits adoption request
 router.post("/", protect, createAdoptionRequest);
 
-// Admin views requests
-router.get("/", protect, admin, getAdoptionRequests);
+// Pet owner or admin can view requests
+router.get("/", protect, getAdoptionRequests);
 
-// Admin/views individual request
-router.get("/:id", protect, admin, getAdoptionRequestById);
+// Pet owner or admin can view one request
+router.get("/:id", protect, getAdoptionRequestById);
 
-// Admin approves/rejects request
-router.put("/:id/status", protect, admin, updateAdoptionStatus);
+// Pet owner or admin can approve/reject
+router.put("/:id/status", protect, updateAdoptionStatus);
 
 module.exports = router;
