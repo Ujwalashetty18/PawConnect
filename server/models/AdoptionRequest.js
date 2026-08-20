@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const adoptionRequestSchema = new mongoose.Schema(
   {
-    // Person who wants to adopt
+    // =====================================================
+    // PERSON WHO WANTS TO ADOPT
+    // =====================================================
+
     applicant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -25,9 +28,13 @@ const adoptionRequestSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
+      trim: true,
     },
 
-    // Pet being requested
+    // =====================================================
+    // PET
+    // =====================================================
+
     petId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Pet",
@@ -37,24 +44,38 @@ const adoptionRequestSchema = new mongoose.Schema(
     petName: {
       type: String,
       required: true,
+      trim: true,
     },
 
-    // Owner of the pet
+    // =====================================================
+    // PET OWNER
+    // =====================================================
+
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
+    // =====================================================
+    // APPLICATION DETAILS
+    // =====================================================
+
     address: {
       type: String,
       required: true,
+      trim: true,
     },
 
     reason: {
       type: String,
       required: true,
+      trim: true,
     },
+
+    // =====================================================
+    // STATUS
+    // =====================================================
 
     status: {
       type: String,

@@ -11,16 +11,32 @@ const {
   updateAdoptionStatus,
 } = require("../controllers/adoptionController");
 
-// User submits adoption request
+// =====================================================
+// CREATE ADOPTION REQUEST
+// POST /api/adoptions
+// =====================================================
+
 router.post("/", protect, createAdoptionRequest);
 
-// Pet owner or admin can view requests
+// =====================================================
+// GET MY SENT + RECEIVED REQUESTS
+// GET /api/adoptions
+// =====================================================
+
 router.get("/", protect, getAdoptionRequests);
 
-// Pet owner or admin can view one request
+// =====================================================
+// GET SINGLE REQUEST
+// GET /api/adoptions/:id
+// =====================================================
+
 router.get("/:id", protect, getAdoptionRequestById);
 
-// Pet owner or admin can approve/reject
+// =====================================================
+// APPROVE / REJECT REQUEST
+// PUT /api/adoptions/:id/status
+// =====================================================
+
 router.put("/:id/status", protect, updateAdoptionStatus);
 
 module.exports = router;

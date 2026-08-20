@@ -270,3 +270,49 @@ exports.deletePet = async (req, res) => {
     });
   }
 };
+// ======================================================
+// DELETE MY PET
+// Only the owner of the pet can delete it
+// ======================================================
+exports.deletePet = async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.id);
+
+    if (!pet) {
+      return res.status(404).json({
+        success: false,
+        message: "Pet not found",
+      });
+    }
+
+    // Check ownership
+    if (pet.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this pet",
+      });
+    }
+
+    // Do not allow deleting an already adopted pet
+    if (pet.status === "adopted") {
+      return res.status(400).json({
+        success: false,
+        message: "An adopted pet cannot be deleted",
+      });
+    }
+
+    await Pet.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      message: "Pet deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete pet error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
