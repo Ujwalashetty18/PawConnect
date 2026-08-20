@@ -468,3 +468,46 @@
     width: 100%;
   }
 }
+/* =========================================
+   PET ACTIONS
+========================================= */
+
+.pet-actions {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #eeeeee;
+}
+
+
+/* =========================================
+   DELETE PET BUTTON
+========================================= */
+
+.delete-pet-button {
+  width: 100%;
+
+  padding: 12px 18px;
+
+  border: 1px solid #c0392b;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #c0392b;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.delete-pet-button:hover {
+  background: #c0392b;
+  color: #ffffff;
+}
+
+.delete-pet-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

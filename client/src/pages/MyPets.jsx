@@ -8,11 +8,15 @@ function MyPets() {
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     fetchMyPets();
   }, []);
 
+  // ======================================================
+  // FETCH MY PETS
+  // ======================================================
   const fetchMyPets = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -46,6 +50,64 @@ function MyPets() {
     }
   };
 
+  // ======================================================
+  // DELETE PET
+  // ======================================================
+  const handleDeletePet = async (petId, petName, status) => {
+    if (status === "adopted") {
+      alert("An adopted pet cannot be deleted.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${petName}"?\n\nThis action cannot be undone.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeletingId(petId);
+      setMessage("");
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(`http://localhost:5000/api/pets/${petId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      console.log("Delete Pet Response:", data);
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete pet");
+      }
+
+      // Remove deleted pet immediately from UI
+      setPets((currentPets) => currentPets.filter((pet) => pet._id !== petId));
+
+      setMessage("Pet deleted successfully.");
+    } catch (error) {
+      console.error("Delete pet error:", error);
+      setMessage(error.message);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  // ======================================================
+  // STATUS CLASS
+  // ======================================================
   const getStatusClass = (status) => {
     if (status === "available") {
       return "available";
@@ -62,6 +124,9 @@ function MyPets() {
     return "";
   };
 
+  // ======================================================
+  // LOADING
+  // ======================================================
   if (loading) {
     return (
       <div className="my-pets-page loading">
@@ -70,6 +135,9 @@ function MyPets() {
     );
   }
 
+  // ======================================================
+  // PAGE
+  // ======================================================
   return (
     <div className="my-pets-page">
       {/* Back Button */}
@@ -86,7 +154,7 @@ function MyPets() {
         <p>Manage the pets you have added to PawConnect.</p>
       </div>
 
-      {/* Error Message */}
+      {/* Message */}
       {message && <div className="my-pets-message">{message}</div>}
 
       {/* No Pets */}
@@ -101,7 +169,6 @@ function MyPets() {
           <button onClick={() => navigate("/add-pet")}>+ Add a Pet</button>
         </div>
       ) : (
-        /* Pets */
         <div className="pets-grid">
           {pets.map((pet) => (
             <div className="pet-card" key={pet._id}>
@@ -161,6 +228,20 @@ function MyPets() {
                 {pet.description && (
                   <p className="pet-description">{pet.description}</p>
                 )}
+
+                {/* DELETE BUTTON */}
+                <div className="pet-actions">
+                  <button
+                    type="button"
+                    className="delete-pet-button"
+                    disabled={deletingId === pet._id}
+                    onClick={() =>
+                      handleDeletePet(pet._id, pet.name, pet.status)
+                    }
+                  >
+                    {deletingId === pet._id ? "Deleting..." : "🗑 Delete Pet"}
+                  </button>
+                </div>
               </div>
             </div>
           ))}
