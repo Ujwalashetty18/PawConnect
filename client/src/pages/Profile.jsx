@@ -1,45 +1,82 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
-
-const API_URL = "http://localhost:5000/api";
-
 function Profile() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
+  // =========================
+  // USER STATE
+  // =========================
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [editingProfile, setEditingProfile] = useState(false);
-
+  // =========================
+  // EDIT PROFILE
+  // =========================
+  const [editing, setEditing] = useState(false);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
-  const [showSettings, setShowSettings] = useState(true);
-
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-
+  // =========================
+  // PASSWORD
+  // =========================
+  const [showPasswordSection, setShowPasswordSection] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
+  // =========================
+  // SETTINGS
+  // =========================
   const [notifications, setNotifications] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  // =========================
+  // MESSAGE
+  // =========================
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  // =========================
+  // LOAD USER
+  // =========================
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  // =========================
+  // DARK MODE
+  // =========================
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("pawconnect-theme");
 
-  const token = localStorage.getItem("token");
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+      document.body.classList.add("dark-mode");
+    } else {
+      setDarkMode(false);
+      document.body.classList.remove("dark-mode");
+    }
+  }, []);
 
-  // ========================================
-  // GET PROFILE
-  // ========================================
-  const fetchProfile = async () => {
+  // =========================
+  // FETCH USER
+  // =========================
+  const fetchUser = async () => {
     try {
-      const response = await fetch(`${API_URL}/users/profile`, {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/api/auth/me", {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -51,68 +88,110 @@ function Profile() {
         throw new Error(data.message || "Failed to load profile");
       }
 
-      setUser(data.user);
+      const currentUser = data.user;
 
-      setFullName(data.user.fullName || "");
-      setPhone(data.user.phone || "");
+      setUser(currentUser);
+      setFullName(currentUser.fullName || "");
+      setPhone(currentUser.phone || "");
 
-      setNotifications(data.user.notificationsEnabled !== false);
-
-      localStorage.setItem("user", JSON.stringify(data.user));
+      if (currentUser.profileImage) {
+        setImagePreview(`http://localhost:5000${currentUser.profileImage}`);
+      }
     } catch (error) {
-      console.error(error);
-      alert(error.message);
+      console.error("Profile error:", error);
+
+      setMessage(error.message || "Unable to load profile.");
+      setMessageType("error");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
+  // =========================
+  // IMAGE SELECT
+  // =========================
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setMessage("Please select a valid image.");
+      setMessageType("error");
       return;
     }
 
-    fetchProfile();
-  }, []);
-
-  // ========================================
-  // THEME
-  // ========================================
-  useEffect(() => {
-    document.body.classList.remove("dark-theme");
-
-    if (theme === "dark") {
-      document.body.classList.add("dark-theme");
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage("Image must be smaller than 5MB.");
+      setMessageType("error");
+      return;
     }
 
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+    setProfileImage(file);
 
-  // ========================================
+    const preview = URL.createObjectURL(file);
+    setImagePreview(preview);
+
+    setEditing(true);
+  };
+
+  // =========================
   // EDIT PROFILE
-  // ========================================
-  const handleSaveProfile = async () => {
-    if (!fullName.trim()) {
-      alert("Please enter your full name");
-      return;
+  // =========================
+  const handleEdit = () => {
+    setEditing(true);
+    setMessage("");
+  };
+
+  // =========================
+  // CANCEL EDIT
+  // =========================
+  const handleCancelEdit = () => {
+    setEditing(false);
+    setFullName(user?.fullName || "");
+    setPhone(user?.phone || "");
+    setProfileImage(null);
+
+    if (user?.profileImage) {
+      setImagePreview(`http://localhost:5000${user.profileImage}`);
+    } else {
+      setImagePreview("");
     }
+  };
 
+  // =========================
+  // SAVE PROFILE
+  // =========================
+  const handleSaveProfile = async () => {
     try {
-      setSaving(true);
+      const token = localStorage.getItem("token");
 
-      const response = await fetch(`${API_URL}/users/profile`, {
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      if (!fullName.trim()) {
+        setMessage("Full name is required.");
+        setMessageType("error");
+        return;
+      }
+
+      const formData = new FormData();
+
+      formData.append("fullName", fullName.trim());
+      formData.append("phone", phone.trim());
+
+      if (profileImage) {
+        formData.append("profileImage", profileImage);
+      }
+
+      const response = await fetch("http://localhost:5000/api/auth/profile", {
         method: "PUT",
-
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-
-        body: JSON.stringify({
-          fullName,
-          phone,
-        }),
+        body: formData,
       });
 
       const data = await response.json();
@@ -123,243 +202,230 @@ function Profile() {
 
       setUser(data.user);
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+      setFullName(data.user.fullName || "");
+      setPhone(data.user.phone || "");
 
-      setEditingProfile(false);
-
-      alert("Profile updated successfully");
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // ========================================
-  // PROFILE IMAGE
-  // ========================================
-  const handleImageUpload = async (event) => {
-    const file = event.target.files?.[0];
-
-    if (!file) return;
-
-    const formData = new FormData();
-
-    formData.append("image", file);
-
-    try {
-      setSaving(true);
-
-      const response = await fetch(`${API_URL}/users/profile-image`, {
-        method: "PUT",
-
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Image upload failed");
+      if (data.user.profileImage) {
+        setImagePreview(`http://localhost:5000${data.user.profileImage}`);
       }
 
-      setUser(data.user);
+      setProfileImage(null);
+      setEditing(false);
 
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      alert("Profile picture updated");
+      setMessage("Profile updated successfully.");
+      setMessageType("success");
     } catch (error) {
-      alert(error.message);
-    } finally {
-      setSaving(false);
+      console.error("Update profile error:", error);
+
+      setMessage(error.message || "Unable to update profile.");
+      setMessageType("error");
     }
   };
 
-  // ========================================
+  // =========================
   // CHANGE PASSWORD
-  // ========================================
+  // =========================
   const handleChangePassword = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      alert("Please fill all password fields");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      alert("New passwords do not match");
-      return;
-    }
-
     try {
-      setSaving(true);
+      if (!currentPassword || !newPassword) {
+        setMessage("Please enter both passwords.");
+        setMessageType("error");
+        return;
+      }
 
-      const response = await fetch(`${API_URL}/users/change-password`, {
-        method: "PUT",
+      if (newPassword.length < 6) {
+        setMessage("New password must be at least 6 characters.");
+        setMessageType("error");
+        return;
+      }
 
-        headers: {
-          "Content-Type": "application/json",
+      const token = localStorage.getItem("token");
 
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "http://localhost:5000/api/auth/change-password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            currentPassword,
+            newPassword,
+          }),
         },
-
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-          confirmPassword,
-        }),
-      });
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Password change failed");
+        throw new Error(data.message || "Failed to change password");
       }
-
-      alert("Password changed successfully");
 
       setCurrentPassword("");
       setNewPassword("");
-      setConfirmPassword("");
+      setShowPasswordSection(false);
 
-      setShowPasswordModal(false);
+      setMessage("Password changed successfully.");
+      setMessageType("success");
     } catch (error) {
-      alert(error.message);
-    } finally {
-      setSaving(false);
+      console.error("Password error:", error);
+
+      setMessage(error.message || "Unable to change password.");
+      setMessageType("error");
     }
   };
 
-  // ========================================
+  // =========================
   // NOTIFICATIONS
-  // ========================================
-  const handleNotifications = async (enabled) => {
-    setNotifications(enabled);
+  // =========================
+  const handleNotificationToggle = () => {
+    const newValue = !notifications;
 
-    try {
-      const response = await fetch(`${API_URL}/users/notifications`, {
-        method: "PUT",
+    setNotifications(newValue);
 
-        headers: {
-          "Content-Type": "application/json",
+    localStorage.setItem("pawconnect-notifications", String(newValue));
+  };
 
-          Authorization: `Bearer ${token}`,
-        },
+  // =========================
+  // APPEARANCE
+  // =========================
+  const handleAppearanceToggle = () => {
+    const newValue = !darkMode;
 
-        body: JSON.stringify({
-          enabled,
-        }),
-      });
+    setDarkMode(newValue);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-
-      setNotifications(!enabled);
-
-      alert("Unable to update notification setting");
+    if (newValue) {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("pawconnect-theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("pawconnect-theme", "light");
     }
   };
 
-  // ========================================
+  // =========================
   // DELETE ACCOUNT
-  // ========================================
+  // =========================
   const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently delete your account?",
+    );
+
+    if (!confirmed) return;
+
     try {
-      setSaving(true);
+      const token = localStorage.getItem("token");
 
-      const response = await fetch(`${API_URL}/users/account`, {
-        method: "DELETE",
-
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "http://localhost:5000/api/auth/delete-account",
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Delete failed");
+        throw new Error(data.message || "Failed to delete account");
       }
 
       localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      localStorage.removeItem("theme");
 
       navigate("/login");
     } catch (error) {
-      alert(error.message);
-    } finally {
-      setSaving(false);
+      console.error("Delete account error:", error);
+
+      setMessage(error.message || "Unable to delete account.");
+      setMessageType("error");
     }
   };
 
-  // ========================================
+  // =========================
   // LOGOUT
-  // ========================================
+  // =========================
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
     navigate("/login");
   };
 
+  // =========================
+  // LOADING
+  // =========================
   if (loading) {
-    return <div className="profile-loading">Loading your profile...</div>;
+    return (
+      <div className="profile-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading your profile...</p>
+      </div>
+    );
   }
 
+  // =========================
+  // NO USER
+  // =========================
   if (!user) {
-    return null;
+    return (
+      <div className="profile-error">
+        <h2>Unable to load profile</h2>
+
+        <button onClick={() => navigate("/login")}>Go to Login</button>
+      </div>
+    );
   }
 
-  const imageUrl = user.profileImage
-    ? `http://localhost:5000${user.profileImage}`
-    : null;
+  // =========================
+  // PROFILE IMAGE
+  // =========================
+  const getInitial = () => {
+    if (user.fullName) {
+      return user.fullName.charAt(0).toUpperCase();
+    }
+
+    return "U";
+  };
 
   return (
     <div className="profile-page">
-      {/* ========================================
-          NAVBAR
-      ======================================== */}
-
+      {/* ================= NAVBAR ================= */}
       <nav className="profile-navbar">
-        <div className="profile-logo" onClick={() => navigate("/home")}>
-          🐾 PawConnect
-        </div>
+        <div className="profile-left">
+          <div className="profile-logo" onClick={() => navigate("/home")}>
+            🐾 PawConnect
+          </div>
 
-        <button className="back-home-button" onClick={() => navigate("/home")}>
-          ← Home
-        </button>
+          <button
+            type="button"
+            className="profile-home-button"
+            onClick={() => navigate("/home")}
+          >
+            ← Home
+          </button>
+        </div>
       </nav>
 
-      {/* ========================================
-          MAIN
-      ======================================== */}
-
+      {/* ================= MAIN ================= */}
       <main className="profile-container">
-        {/* HEADER */}
-
+        {/* ================= PROFILE HEADER ================= */}
         <section className="profile-header">
-          <div className="avatar-wrapper">
-            <div className="profile-avatar">
-              {imageUrl ? (
-                <img src={imageUrl} alt="Profile" />
-              ) : user.fullName ? (
-                user.fullName.charAt(0).toUpperCase()
-              ) : (
-                "U"
-              )}
-            </div>
+          <div className="profile-avatar-wrapper">
+            {imagePreview ? (
+              <img
+                src={imagePreview}
+                alt="Profile"
+                className="profile-avatar-image"
+              />
+            ) : (
+              <div className="profile-avatar">{getInitial()}</div>
+            )}
 
             <button
               className="camera-button"
               onClick={() => fileInputRef.current?.click()}
-              disabled={saving}
+              title="Change profile picture"
             >
               📷
             </button>
@@ -367,8 +433,8 @@ function Profile() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/png,image/jpeg,image/jpg,image/webp"
-              onChange={handleImageUpload}
+              accept="image/*"
+              onChange={handleImageChange}
               hidden
             />
           </div>
@@ -380,34 +446,40 @@ function Profile() {
           </div>
         </section>
 
-        {/* ========================================
-            PERSONAL INFORMATION
-        ======================================== */}
+        {/* ================= MESSAGE ================= */}
+        {message && (
+          <div
+            className={`profile-message ${
+              messageType === "success" ? "success-message" : "error-message"
+            }`}
+          >
+            {message}
+          </div>
+        )}
 
+        {/* ================= PERSONAL INFORMATION ================= */}
         <section className="profile-card">
-          <div className="section-title">
-            <h2>👤 Personal Information</h2>
+          <div className="card-header">
+            <div>
+              <h2>👤 Personal Information</h2>
 
-            {!editingProfile && (
-              <button
-                className="edit-button"
-                onClick={() => {
-                  setFullName(user.fullName || "");
-                  setPhone(user.phone || "");
-                  setEditingProfile(true);
-                }}
-              >
+              <p>View and manage your personal information</p>
+            </div>
+
+            {!editing && (
+              <button className="primary-button" onClick={handleEdit}>
                 ✏️ Edit Profile
               </button>
             )}
           </div>
 
-          {editingProfile ? (
+          {editing ? (
             <div className="edit-profile-form">
               <div className="form-group">
                 <label>Full Name</label>
 
                 <input
+                  type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Enter your full name"
@@ -418,316 +490,234 @@ function Profile() {
                 <label>Phone Number</label>
 
                 <input
+                  type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Enter your phone number"
+                  placeholder="Enter phone number"
                 />
               </div>
 
               <div className="form-group">
                 <label>Email</label>
 
-                <input value={user.email || ""} disabled />
+                <input type="email" value={user.email} disabled />
 
-                <small>Email cannot be changed.</small>
+                <small>Email cannot be changed here.</small>
               </div>
 
-              <div className="form-actions">
-                <button
-                  className="cancel-button"
-                  onClick={() => setEditingProfile(false)}
-                >
-                  Cancel
+              <div className="edit-buttons">
+                <button className="primary-button" onClick={handleSaveProfile}>
+                  ✓ Save Changes
                 </button>
 
-                <button
-                  className="save-button"
-                  onClick={handleSaveProfile}
-                  disabled={saving}
-                >
-                  {saving ? "Saving..." : "Save Changes"}
+                <button className="secondary-button" onClick={handleCancelEdit}>
+                  Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <div className="profile-info-grid">
-              <div className="info-item">
+            <div className="information-grid">
+              <div className="information-item">
                 <span>Full Name</span>
-                <strong>{user.fullName || "Not available"}</strong>
+                <strong>{user.fullName}</strong>
               </div>
 
-              <div className="info-item">
+              <div className="information-item">
                 <span>Email</span>
-                <strong>{user.email || "Not available"}</strong>
+                <strong>{user.email}</strong>
               </div>
 
-              <div className="info-item">
+              <div className="information-item">
                 <span>Phone</span>
                 <strong>{user.phone || "Not available"}</strong>
               </div>
 
-              <div className="info-item">
+              <div className="information-item">
                 <span>Account Type</span>
-                <strong>{user.role || "user"}</strong>
+                <strong>{user.role || "User"}</strong>
               </div>
             </div>
           )}
         </section>
 
-        {/* ========================================
-            ACTIVITY
-        ======================================== */}
-
+        {/* ================= ACTIVITY ================= */}
         <section className="profile-card">
-          <h2>🐾 My Activity</h2>
+          <div className="card-header">
+            <div>
+              <h2>🐾 My Activity</h2>
 
-          <div className="profile-actions">
-            <button onClick={() => navigate("/my-pets")}>
-              <span>🐶</span>
+              <p>Manage your pets and adoption activity</p>
+            </div>
+          </div>
 
-              <div>
+          <div className="activity-list">
+            <button
+              className="activity-item"
+              onClick={() => navigate("/my-pets")}
+            >
+              <div className="activity-icon">🐶</div>
+
+              <div className="activity-text">
                 <strong>My Pets</strong>
-
-                <small>View and manage your pets</small>
+                <span>View and manage your pets</span>
               </div>
 
-              <b>›</b>
+              <span className="activity-arrow">→</span>
             </button>
 
-            <button onClick={() => navigate("/my-adoptions")}>
-              <span>❤️</span>
+            <button
+              className="activity-item"
+              onClick={() => navigate("/my-adoptions")}
+            >
+              <div className="activity-icon">❤️</div>
 
-              <div>
+              <div className="activity-text">
                 <strong>My Adoption Requests</strong>
-
-                <small>Track your adoption requests</small>
+                <span>Track your adoption requests</span>
               </div>
 
-              <b>›</b>
+              <span className="activity-arrow">→</span>
             </button>
           </div>
         </section>
 
-        {/* ========================================
-            SETTINGS
-        ======================================== */}
-
-        <section className="profile-card settings-card">
-          <div
-            className="settings-heading"
-            onClick={() => setShowSettings(!showSettings)}
-          >
+        {/* ================= SETTINGS ================= */}
+        <section className="profile-card">
+          <div className="card-header">
             <div>
               <h2>⚙️ Settings</h2>
 
               <p>Manage your account preferences</p>
             </div>
-
-            <span>{showSettings ? "▲" : "▼"}</span>
           </div>
 
-          {showSettings && (
-            <div className="settings-list">
-              {/* CHANGE PASSWORD */}
+          {/* CHANGE PASSWORD */}
+          <div className="setting-item">
+            <div className="setting-left">
+              <div className="setting-icon">🔐</div>
 
-              <button
-                className="setting-item"
-                onClick={() => setShowPasswordModal(true)}
-              >
-                <span>🔐</span>
+              <div>
+                <strong>Change Password</strong>
 
-                <div>
-                  <strong>Change Password</strong>
-
-                  <small>Update your account password</small>
-                </div>
-
-                <b>›</b>
-              </button>
-
-              {/* NOTIFICATIONS */}
-
-              <div className="setting-item">
-                <span>🔔</span>
-
-                <div>
-                  <strong>Notifications</strong>
-
-                  <small>Receive updates about your requests</small>
-                </div>
-
-                <label className="toggle">
-                  <input
-                    type="checkbox"
-                    checked={notifications}
-                    onChange={(e) => handleNotifications(e.target.checked)}
-                  />
-
-                  <span></span>
-                </label>
+                <span>Update your account password</span>
               </div>
+            </div>
 
-              {/* APPEARANCE */}
+            <button
+              className="setting-action"
+              onClick={() => setShowPasswordSection(!showPasswordSection)}
+            >
+              {showPasswordSection ? "Close" : "Change"}
+            </button>
+          </div>
 
-              <div className="setting-item">
-                <span>{theme === "dark" ? "🌙" : "☀️"}</span>
+          {showPasswordSection && (
+            <div className="password-form">
+              <div className="password-field">
+                <input
+                  type={showCurrentPassword ? "text" : "password"}
+                  placeholder="Current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                />
 
-                <div>
-                  <strong>Appearance</strong>
-
-                  <small>Choose how PawConnect looks</small>
-                </div>
-
-                <select
-                  className="theme-select"
-                  value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                 >
-                  <option value="light">Light</option>
-
-                  <option value="dark">Dark</option>
-                </select>
+                  {showCurrentPassword ? "🙈" : "👁️"}
+                </button>
               </div>
 
-              {/* DELETE */}
+              <div className="password-field">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  placeholder="New password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                >
+                  {showNewPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
 
               <button
-                className="setting-item danger"
-                onClick={() => setShowDeleteModal(true)}
+                className="primary-button password-button"
+                onClick={handleChangePassword}
               >
-                <span>🗑️</span>
-
-                <div>
-                  <strong>Delete Account</strong>
-
-                  <small>Permanently delete your account</small>
-                </div>
-
-                <b>›</b>
+                Change Password
               </button>
             </div>
           )}
+
+          {/* NOTIFICATIONS */}
+          <div className="setting-item">
+            <div className="setting-left">
+              <div className="setting-icon">🔔</div>
+
+              <div>
+                <strong>Notifications</strong>
+
+                <span>Receive updates about your requests</span>
+              </div>
+            </div>
+
+            <button
+              className={`toggle ${notifications ? "active" : ""}`}
+              onClick={handleNotificationToggle}
+              aria-label="Toggle notifications"
+            >
+              <span></span>
+            </button>
+          </div>
+
+          {/* APPEARANCE */}
+          <div className="setting-item">
+            <div className="setting-left">
+              <div className="setting-icon">{darkMode ? "🌙" : "☀️"}</div>
+
+              <div>
+                <strong>Appearance</strong>
+
+                <span>Customize your display</span>
+              </div>
+            </div>
+
+            <button
+              className={`appearance-button ${darkMode ? "dark" : ""}`}
+              onClick={handleAppearanceToggle}
+            >
+              {darkMode ? "Dark" : "Light"}
+            </button>
+          </div>
+
+          {/* DELETE ACCOUNT */}
+          <div className="setting-item delete-setting">
+            <div className="setting-left">
+              <div className="setting-icon">🗑️</div>
+
+              <div>
+                <strong>Delete Account</strong>
+
+                <span>Permanently delete your account</span>
+              </div>
+            </div>
+
+            <button className="delete-button" onClick={handleDeleteAccount}>
+              Delete
+            </button>
+          </div>
         </section>
 
-        {/* LOGOUT */}
-
-        <button className="profile-logout" onClick={handleLogout}>
+        {/* ================= LOGOUT ================= */}
+        <button className="logout-profile-button" onClick={handleLogout}>
           🚪 Logout
         </button>
       </main>
-
-      {/* ========================================
-          PASSWORD MODAL
-      ======================================== */}
-
-      {showPasswordModal && (
-        <div className="modal-overlay">
-          <div className="modal-card">
-            <div className="modal-header">
-              <div>
-                <h2>🔐 Change Password</h2>
-
-                <p>Keep your PawConnect account secure.</p>
-              </div>
-
-              <button
-                className="modal-close"
-                onClick={() => setShowPasswordModal(false)}
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="modal-form">
-              <div className="form-group">
-                <label>Current Password</label>
-
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter current password"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>New Password</label>
-
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Confirm New Password</label>
-
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
-                />
-              </div>
-            </div>
-
-            <div className="modal-actions">
-              <button
-                className="cancel-button"
-                onClick={() => setShowPasswordModal(false)}
-              >
-                Cancel
-              </button>
-
-              <button
-                className="save-button"
-                onClick={handleChangePassword}
-                disabled={saving}
-              >
-                {saving ? "Changing..." : "Change Password"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================
-          DELETE MODAL
-      ======================================== */}
-
-      {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-card delete-modal">
-            <div className="delete-icon">🗑️</div>
-
-            <h2>Delete your account?</h2>
-
-            <p>
-              This action cannot be undone. Your PawConnect account will be
-              permanently deleted.
-            </p>
-
-            <div className="modal-actions">
-              <button
-                className="cancel-button"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Cancel
-              </button>
-
-              <button
-                className="delete-button"
-                onClick={handleDeleteAccount}
-                disabled={saving}
-              >
-                {saving ? "Deleting..." : "Delete Account"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

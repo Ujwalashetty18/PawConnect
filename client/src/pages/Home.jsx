@@ -1,49 +1,82 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/login");
+  };
+
+  const goTo = (path) => {
+    navigate(path);
+    setMenuOpen(false);
   };
 
   return (
     <div className="home-page">
       {/* ================= NAVBAR ================= */}
       <nav className="navbar">
-        <div className="logo" onClick={() => navigate("/home")}>
+        {/* Logo */}
+        <div className="logo" onClick={() => goTo("/home")}>
           🐾 PawConnect
         </div>
 
+        {/* Desktop Navigation */}
         <div className="nav-links">
-          <span onClick={() => navigate("/home")}>Home</span>
+          <span onClick={() => goTo("/home")}>Home</span>
 
-          <span onClick={() => navigate("/pets")}>Find Pets</span>
+          <span onClick={() => goTo("/pets")}>Find Pets</span>
 
-          <span onClick={() => navigate("/my-pets")}>My Pets</span>
+          <span onClick={() => goTo("/my-pets")}>My Pets</span>
 
-          <span onClick={() => navigate("/my-adoptions")}>My Requests</span>
+          <span onClick={() => goTo("/my-adoptions")}>My Requests</span>
 
-          <span onClick={() => navigate("/donations")}>Donations</span>
+          <span onClick={() => goTo("/donations")}>Donations</span>
 
-          <span onClick={() => navigate("/profile")}>👤 Profile</span>
+          <span onClick={() => goTo("/profile")}>👤 Profile</span>
 
           <button className="logout-button" onClick={handleLogout}>
             Logout
           </button>
-
-          <button
-            className="add-pet-button"
-            onClick={() => navigate("/add-pet")}
-          >
-            ❤️ Put My Pet Up for Adoption
-          </button>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="mobile-menu-button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
       </nav>
 
-      {/* ================= MAIN CONTENT ================= */}
+      {/* ================= MOBILE MENU ================= */}
+      {menuOpen && (
+        <div className="mobile-menu">
+          <button onClick={() => goTo("/home")}>🏠 Home</button>
+
+          <button onClick={() => goTo("/pets")}>🐶 Find Pets</button>
+
+          <button onClick={() => goTo("/my-pets")}>🐾 My Pets</button>
+
+          <button onClick={() => goTo("/my-adoptions")}>❤️ My Requests</button>
+
+          <button onClick={() => goTo("/donations")}>💝 Donations</button>
+
+          <button onClick={() => goTo("/profile")}>👤 Profile</button>
+
+          <button className="mobile-logout" onClick={handleLogout}>
+            🚪 Logout
+          </button>
+        </div>
+      )}
+
+      {/* ================= MAIN ================= */}
       <main className="home-content">
         {/* ================= HERO ================= */}
         <section className="hero">
@@ -54,9 +87,9 @@ function Home() {
           </p>
 
           <div className="hero-buttons">
-            <button onClick={() => navigate("/pets")}>🐶 Find a Pet</button>
+            <button onClick={() => goTo("/pets")}>🐶 Find a Pet</button>
 
-            <button onClick={() => navigate("/add-pet")}>
+            <button onClick={() => goTo("/add-pet")}>
               ❤️ Put My Pet Up for Adoption
             </button>
           </div>
@@ -64,29 +97,23 @@ function Home() {
 
         {/* ================= FEATURES ================= */}
         <section className="features">
-          {/* Find Pets */}
-          <div className="feature-card" onClick={() => navigate("/pets")}>
+          <div className="feature-card" onClick={() => goTo("/pets")}>
             <div className="feature-icon">🐶</div>
 
             <h2>Find Pets</h2>
 
-            <p>Discover pets looking for a loving home.</p>
+            <p>Discover pets looking for a loving and caring home.</p>
           </div>
 
-          {/* My Pets */}
-          <div className="feature-card" onClick={() => navigate("/my-pets")}>
+          <div className="feature-card" onClick={() => goTo("/my-pets")}>
             <div className="feature-icon">🐾</div>
 
             <h2>My Pets</h2>
 
-            <p>View and manage the pets you have added.</p>
+            <p>View and manage the pets you have added for adoption.</p>
           </div>
 
-          {/* My Adoption Requests */}
-          <div
-            className="feature-card"
-            onClick={() => navigate("/my-adoptions")}
-          >
+          <div className="feature-card" onClick={() => goTo("/my-adoptions")}>
             <div className="feature-icon">❤️</div>
 
             <h2>My Adoption Requests</h2>
@@ -94,8 +121,7 @@ function Home() {
             <p>Track the pets you have requested to adopt.</p>
           </div>
 
-          {/* Donations */}
-          <div className="feature-card" onClick={() => navigate("/donations")}>
+          <div className="feature-card" onClick={() => goTo("/donations")}>
             <div className="feature-icon">💝</div>
 
             <h2>Support Animal Welfare</h2>

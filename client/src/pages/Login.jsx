@@ -42,7 +42,7 @@ function Login() {
       // Save JWT token
       localStorage.setItem("token", data.token);
 
-      alert("Login successful! 🐾");
+      
 
       // Go to Home
       navigate("/home");

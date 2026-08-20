@@ -60,7 +60,7 @@ function AdoptionRequest() {
       }
 
       if (data.success) {
-        alert("Adoption request sent successfully! ❤️");
+        
 
         navigate(`/pets/${id}`);
       }

@@ -285,3 +285,186 @@
     font-size: 25px;
   }
 }
+/* =========================================
+   REQUEST SECTION
+========================================= */
+
+.request-section {
+  width: 100%;
+  max-width: 1125px;
+
+  margin: 60px auto 0;
+}
+
+
+/* =========================================
+   SECTION HEADER
+========================================= */
+
+.request-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 25px;
+}
+
+.request-section-header h2 {
+  margin: 0 0 6px;
+
+  color: #333;
+
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.request-section-header p {
+  margin: 0;
+
+  color: #666;
+
+  font-size: 16px;
+}
+
+.section-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+
+/* =========================================
+   REQUEST COUNT
+========================================= */
+
+.request-count {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #8b5e3c;
+  color: #ffffff;
+
+  border-radius: 50%;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.request-actions {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 20px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid #eeeeee;
+}
+
+.approve-button,
+.reject-button {
+  flex: 1;
+
+  padding: 12px 20px;
+
+  border-radius: 7px;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+
+/* ACCEPT */
+
+.approve-button {
+  border: 1px solid #2e8b57;
+
+  background: #2e8b57;
+
+  color: #ffffff;
+}
+
+.approve-button:hover {
+  background: #246b45;
+  border-color: #246b45;
+}
+
+
+/* REJECT */
+
+.reject-button {
+  border: 1px solid #c0392b;
+
+  background: #ffffff;
+
+  color: #c0392b;
+}
+
+.reject-button:hover {
+  background: #c0392b;
+  color: #ffffff;
+}
+
+
+/* =========================================
+   APPROVED MESSAGE
+========================================= */
+
+.approved-message {
+  color: #176b2c;
+
+  line-height: 1.7;
+
+  font-size: 14px;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   REJECTED MESSAGE
+========================================= */
+
+.rejected-message {
+  color: #a40000 !important;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   RESPONSIVE ACTION BUTTONS
+========================================= */
+
+@media (max-width: 600px) {
+
+  .request-section-header h2 {
+    font-size: 24px;
+  }
+
+  .request-section-header p {
+    font-size: 14px;
+  }
+
+  .request-actions {
+    flex-direction: column;
+  }
+
+  .approve-button,
+  .reject-button {
+    width: 100%;
+  }
+}
