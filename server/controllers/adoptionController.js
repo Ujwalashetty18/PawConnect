@@ -3,7 +3,6 @@ const Pet = require("../models/Pet");
 
 // ======================================================
 // CREATE ADOPTION REQUEST
-// Any logged-in user can request an available pet
 // ======================================================
 exports.createAdoptionRequest = async (req, res) => {
   try {
@@ -17,7 +16,7 @@ exports.createAdoptionRequest = async (req, res) => {
       });
     }
 
-    // Get logged-in user
+    // Logged-in user
     const applicant = req.user;
 
     // Find pet
@@ -30,7 +29,7 @@ exports.createAdoptionRequest = async (req, res) => {
       });
     }
 
-    // Cannot request an already adopted pet
+    // Pet must be available
     if (pet.status !== "available") {
       return res.status(400).json({
         success: false,
@@ -46,7 +45,7 @@ exports.createAdoptionRequest = async (req, res) => {
       });
     }
 
-    // Check whether this user already has a pending request
+    // Check duplicate pending request
     const existingRequest = await AdoptionRequest.findOne({
       applicant: req.user._id,
       petId: pet._id,
@@ -60,25 +59,20 @@ exports.createAdoptionRequest = async (req, res) => {
       });
     }
 
-    // Create adoption request
+    // Create request
     const adoptionRequest = await AdoptionRequest.create({
       applicant: req.user._id,
-
       applicantName: applicant.fullName,
-
       email: applicant.email,
-
-      phone,
+      phone: phone,
 
       petId: pet._id,
-
       petName: pet.name,
 
       owner: pet.owner,
 
-      address,
-
-      reason,
+      address: address,
+      reason: reason,
 
       status: "Pending",
     });
@@ -101,27 +95,47 @@ exports.createAdoptionRequest = async (req, res) => {
 // ======================================================
 // GET ADOPTION REQUESTS
 //
-// Normal user:
-// → sees requests for pets THEY OWN
-//
-// Admin:
-// → sees all requests
+// receivedRequests = people requesting MY pets
+// sentRequests     = requests I sent for other pets
 // ======================================================
 exports.getAdoptionRequests = async (req, res) => {
   try {
-    let requests;
+    let receivedRequests = [];
+    let sentRequests = [];
 
+    // ==================================================
+    // ADMIN
+    // ==================================================
     if (req.user.role === "admin") {
-      // Admin can see everything
-      requests = await AdoptionRequest.find()
+      receivedRequests = await AdoptionRequest.find()
         .populate("applicant", "fullName email phone")
         .populate("owner", "fullName email phone")
         .populate("petId")
         .sort({ createdAt: -1 });
-    } else {
-      // Normal user sees requests for their own pets
-      requests = await AdoptionRequest.find({
+
+      sentRequests = receivedRequests;
+    }
+
+    // ==================================================
+    // NORMAL USER
+    // ==================================================
+    else {
+      // -----------------------------------------------
+      // REQUESTS RECEIVED FOR MY PETS
+      // -----------------------------------------------
+      receivedRequests = await AdoptionRequest.find({
         owner: req.user._id,
+      })
+        .populate("applicant", "fullName email phone")
+        .populate("owner", "fullName email phone")
+        .populate("petId")
+        .sort({ createdAt: -1 });
+
+      // -----------------------------------------------
+      // REQUESTS I SENT
+      // -----------------------------------------------
+      sentRequests = await AdoptionRequest.find({
+        applicant: req.user._id,
       })
         .populate("applicant", "fullName email phone")
         .populate("owner", "fullName email phone")
@@ -131,8 +145,12 @@ exports.getAdoptionRequests = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      count: requests.length,
-      requests,
+
+      receivedCount: receivedRequests.length,
+      sentCount: sentRequests.length,
+
+      receivedRequests,
+      sentRequests,
     });
   } catch (error) {
     console.error("Get adoption requests error:", error);
@@ -147,7 +165,9 @@ exports.getAdoptionRequests = async (req, res) => {
 // ======================================================
 // GET SINGLE ADOPTION REQUEST
 //
-// Owner of the pet OR admin can view it
+// Applicant → can view own request
+// Owner     → can view request for own pet
+// Admin     → can view everything
 // ======================================================
 exports.getAdoptionRequestById = async (req, res) => {
   try {
@@ -163,16 +183,18 @@ exports.getAdoptionRequestById = async (req, res) => {
       });
     }
 
-    // Check permission
-    const isOwner =
-      request.owner && request.owner.toString() === req.user._id.toString();
+    const applicantId = request.applicant?._id?.toString();
+    const ownerId = request.owner?._id?.toString();
+    const currentUserId = req.user._id.toString();
 
+    const isApplicant = applicantId === currentUserId;
+    const isOwner = ownerId === currentUserId;
     const isAdmin = req.user.role === "admin";
 
-    if (!isOwner && !isAdmin) {
+    if (!isApplicant && !isOwner && !isAdmin) {
       return res.status(403).json({
         success: false,
-        message: "Only the pet owner or admin can update this request",
+        message: "You are not authorized to view this request",
       });
     }
 
@@ -193,12 +215,16 @@ exports.getAdoptionRequestById = async (req, res) => {
 // ======================================================
 // UPDATE ADOPTION STATUS
 //
-// Pet owner OR admin can approve/reject
+// ONLY:
+// Pet Owner OR Admin
+//
+// can approve/reject
 // ======================================================
 exports.updateAdoptionStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
+    // Validate status
     if (!["Pending", "Approved", "Rejected"].includes(status)) {
       return res.status(400).json({
         success: false,
@@ -216,8 +242,10 @@ exports.updateAdoptionStatus = async (req, res) => {
       });
     }
 
-    // Check owner/admin permission
-    // Check owner/admin permission
+    // ==================================================
+    // CHECK OWNER / ADMIN
+    // ==================================================
+
     const isOwner =
       request.owner && request.owner.toString() === req.user._id.toString();
 
@@ -226,7 +254,8 @@ exports.updateAdoptionStatus = async (req, res) => {
     if (!isOwner && !isAdmin) {
       return res.status(403).json({
         success: false,
-        message: "Only the pet owner or admin can update this request",
+        message:
+          "Only the pet owner or admin can approve or reject this request",
       });
     }
 
@@ -243,8 +272,9 @@ exports.updateAdoptionStatus = async (req, res) => {
     // ==================================================
     // APPROVE
     // ==================================================
+
     if (status === "Approved") {
-      // Pet must still be available
+      // Already adopted
       if (pet.status === "adopted") {
         return res.status(400).json({
           success: false,
@@ -252,15 +282,15 @@ exports.updateAdoptionStatus = async (req, res) => {
         });
       }
 
-      // Approve this request
+      // Approve selected request
       request.status = "Approved";
       await request.save();
 
-      // Pet is now adopted
+      // Pet becomes adopted
       pet.status = "adopted";
       await pet.save();
 
-      // Reject all other pending requests for this pet
+      // Reject all other pending requests
       await AdoptionRequest.updateMany(
         {
           petId: pet._id,
@@ -268,25 +298,53 @@ exports.updateAdoptionStatus = async (req, res) => {
           status: "Pending",
         },
         {
-          status: "Rejected",
+          $set: {
+            status: "Rejected",
+          },
         },
       );
-    } else {
-      // ==================================================
-      // REJECT / PENDING
-      // ==================================================
-      request.status = status;
+    }
+
+    // ==================================================
+    // REJECT
+    // ==================================================
+    else if (status === "Rejected") {
+      request.status = "Rejected";
       await request.save();
     }
 
+    // ==================================================
+    // PENDING
+    // ==================================================
+    else {
+      request.status = "Pending";
+      await request.save();
+    }
+
+    // Get updated request
     const updatedRequest = await AdoptionRequest.findById(request._id)
       .populate("applicant", "fullName email phone")
       .populate("owner", "fullName email phone")
       .populate("petId");
 
+    // ==================================================
+    // RESPONSE
+    // ==================================================
+
+    let message = "Adoption request updated successfully";
+
+    if (status === "Approved") {
+      message =
+        "Adoption request approved successfully. The applicant can now be contacted.";
+    }
+
+    if (status === "Rejected") {
+      message = "Adoption request rejected successfully.";
+    }
+
     res.status(200).json({
       success: true,
-      message: `Adoption request ${status}`,
+      message,
       request: updatedRequest,
     });
   } catch (error) {
