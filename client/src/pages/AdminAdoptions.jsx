@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminAdoptions.css";
+const API_URL = import.meta.env.VITE_API_URL;
 function AdminAdoptions() {
   const navigate = useNavigate();
 
@@ -15,7 +16,7 @@ function AdminAdoptions() {
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:5000/api/adoptions", {
+      const response = await fetch(`${API_URL}/api/adoptions`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,17 +49,14 @@ function AdminAdoptions() {
   // ================= UPDATE STATUS =================
   const updateStatus = async (id, status) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/adoptions/${id}/status`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status }),
-        },
-      );
+     const response = await fetch(`${API_URL}/api/adoptions/${id}/status`, {
+       method: "PUT",
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+       },
+       body: JSON.stringify({ status }),
+     });
 
       const data = await response.json();
 

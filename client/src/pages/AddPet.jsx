@@ -60,14 +60,15 @@ function AddPet() {
         data.append("image", image);
       }
 
-      const response = await fetch("http://localhost:5000/api/pets", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: data,
-      });
+     const API_URL = import.meta.env.VITE_API_URL;
 
+     const response = await fetch(`${API_URL}/api/pets`, {
+       method: "POST",
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+       body: data,
+     });
       const result = await response.json();
 
       if (!response.ok) {

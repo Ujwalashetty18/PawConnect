@@ -75,7 +75,9 @@ function Profile() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/auth/me", {
+      const API_URL = import.meta.env.VITE_API_URL;
+
+      const response = await fetch(`${API_URL}/api/auth/me`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -94,9 +96,10 @@ function Profile() {
       setFullName(currentUser.fullName || "");
       setPhone(currentUser.phone || "");
 
-      if (currentUser.profileImage) {
-        setImagePreview(`http://localhost:5000${currentUser.profileImage}`);
-      }
+     if (currentUser.profileImage) {
+
+       setImagePreview(`${API_URL}${currentUser.profileImage}`);
+     }
     } catch (error) {
       console.error("Profile error:", error);
 
@@ -152,8 +155,9 @@ function Profile() {
     setPhone(user?.phone || "");
     setProfileImage(null);
 
+
     if (user?.profileImage) {
-      setImagePreview(`http://localhost:5000${user.profileImage}`);
+      setImagePreview(`${API_URL}${user.profileImage}`);
     } else {
       setImagePreview("");
     }
@@ -186,7 +190,8 @@ function Profile() {
         formData.append("profileImage", profileImage);
       }
 
-      const response = await fetch("http://localhost:5000/api/auth/profile", {
+
+      const response = await fetch(`${API_URL}/api/auth/profile`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -205,8 +210,10 @@ function Profile() {
       setFullName(data.user.fullName || "");
       setPhone(data.user.phone || "");
 
+      
+
       if (data.user.profileImage) {
-        setImagePreview(`http://localhost:5000${data.user.profileImage}`);
+        setImagePreview(`${API_URL}${data.user.profileImage}`);
       }
 
       setProfileImage(null);
@@ -241,20 +248,19 @@ function Profile() {
 
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/change-password",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            currentPassword,
-            newPassword,
-          }),
+      
+
+      const response = await fetch(`${API_URL}/api/auth/change-password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
 
       const data = await response.json();
 
@@ -317,15 +323,14 @@ function Profile() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/delete-account",
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+     
+
+     const response = await fetch(`${API_URL}/api/auth/delete-account`, {
+       method: "DELETE",
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     });
 
       const data = await response.json();
 

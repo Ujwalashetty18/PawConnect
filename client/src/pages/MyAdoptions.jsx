@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MyAdoptions.css";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function MyAdoptions() {
   const navigate = useNavigate();
 
@@ -23,12 +23,12 @@ function MyAdoptions() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/adoptions", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+     const response = await fetch(`${API_URL}/api/adoptions`, {
+       method: "GET",
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     });
 
       const data = await response.json();
 
@@ -65,19 +65,19 @@ function MyAdoptions() {
         return;
       }
 
-      const response = await fetch(
-        `http://localhost:5000/api/adoptions/${requestId}/status`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            status,
-          }),
-        },
-      );
+     const response = await fetch(
+       `${API_URL}/api/adoptions/${requestId}/status`,
+       {
+         method: "PUT",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({
+           status,
+         }),
+       },
+     );
 
       const data = await response.json();
 

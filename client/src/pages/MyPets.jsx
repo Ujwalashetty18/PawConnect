@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MyPets.css";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function MyPets() {
   const navigate = useNavigate();
 
@@ -22,12 +22,12 @@ function MyPets() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/pets/my-pets", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+     const response = await fetch(`${API_URL}/api/pets/my-pets`, {
+       method: "GET",
+       headers: {
+         Authorization: `Bearer ${token}`,
+       },
+     });
 
       const data = await response.json();
 
@@ -108,7 +108,7 @@ function MyPets() {
               {/* Image */}
               {pet.image ? (
                 <img
-                  src={`http://localhost:5000${pet.image}`}
+                  src={`${API_URL}${pet.image}`}
                   alt={pet.name}
                   className="pet-image"
                 />

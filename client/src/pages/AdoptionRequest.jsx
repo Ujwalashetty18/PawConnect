@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function AdoptionRequest() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -36,12 +36,12 @@ function AdoptionRequest() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/adoptions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await fetch(`${API_URL}/api/adoptions`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
         body: JSON.stringify({
           applicantName: formData.applicantName,
           email: formData.email,
