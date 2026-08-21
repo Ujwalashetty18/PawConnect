@@ -110,7 +110,7 @@ Potential adopters can submit requests for pets.
 
 Adoption requests support three statuses:
 
-```text
+
 Pending
 Approved
 Rejected
@@ -144,6 +144,7 @@ Unauthorized users cannot access another user's requests.
 Only the pet owner or administrator can approve or reject an adoption request.
 Users cannot submit an adoption request for their own pet.
 🏗️ System Architecture
+```
                     ┌─────────────────────┐
                     │        User         │
                     │     Web Browser     │
@@ -181,6 +182,7 @@ Users cannot submit an adoption request for their own pet.
                                     ┌─────────────┐
                                     │   MongoDB   │
                                     └─────────────┘
+```
 🛠️ Technology Stack
 Frontend
 React.js
@@ -202,6 +204,7 @@ Visual Studio Code
 Git
 GitHub
 Postman
+```
 📁 Project Structure
 PawConnect/
 │
@@ -252,6 +255,7 @@ PawConnect/
 │   └── .env
 │
 └── README.md
+```
 🚀 Getting Started
 1. Clone the Repository
 git clone https://github.com/Ujwalashetty18/PawConnect.git
@@ -313,30 +317,33 @@ AdoptionRequests
 User → Pet Relationship
 
 A user can add multiple pets.
-
+```
 User
  │
  ├──────► Pet
  ├──────► Pet
  └──────► Pet
+```
 User → Adoption Request Relationship
 
 A user can submit multiple adoption requests.
-
+```
 User
  │
  ├──────► AdoptionRequest
  ├──────► AdoptionRequest
  └──────► AdoptionRequest
+```
 Pet → Adoption Request Relationship
 
 A pet can receive multiple adoption requests.
-
+```
 Pet
  │
  ├──────► AdoptionRequest
  ├──────► AdoptionRequest
  └──────► AdoptionRequest
+```
 🔌 API Documentation
 Authentication API
 Method	Endpoint	Description
@@ -356,7 +363,7 @@ GET	/api/adoptions/:id	Get a specific request
 PUT	/api/adoptions/:id/status	Approve or reject request
 
 Protected endpoints require a valid JWT token.
-
+```
 ❤️ Adoption Flow
 User Login
     │
@@ -410,6 +417,7 @@ Authentication Middleware
  │
  ▼
 Authorized Request
+```
 🧪 Testing
 
 The application should be tested for the following scenarios.
@@ -446,40 +454,39 @@ Screenshots of the completed application can be added below.
 
 🏠 Home Page
 
-<img width="1914" height="870" alt="image" src="https://github.com/user-attachments/assets/9e64b05d-cb91-49ba-8ad6-e4cfbdf0fcef" />
+<img width="1914" height="870" alt="Screenshot 2026-08-22 021345" src="https://github.com/user-attachments/assets/a517b40b-d1e2-42b9-a191-305903cdd680" />
+
 
 
 🔐 Login
 
-Add screenshot here.
+<img width="1920" height="878" alt="image" src="https://github.com/user-attachments/assets/628b9f4b-1661-474d-821e-8a7485b10a1b" />
 
 🐾 Pets
 
-Add screenshot here.
+<img width="1920" height="1427" alt="image" src="https://github.com/user-attachments/assets/6f8931c2-e5db-4b24-875c-859d2907616c" />
+
 
 🐶 Pet Details
 
-Add screenshot here.
+<img width="1920" height="898" alt="image" src="https://github.com/user-attachments/assets/8fcce25b-5761-4dbc-93a1-e8c16d301b0a" />
 
 ➕ Add Pet
 
-Add screenshot here.
+<img width="1920" height="1780" alt="image" src="https://github.com/user-attachments/assets/09417d7e-6efc-4184-bb9a-5d9163241c45" />
 
 🐾 My Pets
 
-Add screenshot here.
+<img width="1920" height="878" alt="image" src="https://github.com/user-attachments/assets/0f3c0d54-7cf0-444f-a5d0-cd474c31e2e7" />
 
 ❤️ Adoption Request
 
-Add screenshot here.
+<img width="1920" height="1293" alt="image" src="https://github.com/user-attachments/assets/823d8477-83f7-4dae-89ba-a2de0d2aa463" />
 
-📋 My Adoption Requests
+📋 My Adoption Requests/📥 Received Adoption Requests
 
-Add screenshot here.
+<img width="1920" height="1145" alt="image" src="https://github.com/user-attachments/assets/f5e5163c-1a4e-4060-8939-9848ddd494b7" />
 
-📥 Received Adoption Requests
-
-Add screenshot here.
 
 🚧 Future Enhancements
 
@@ -509,7 +516,6 @@ The platform provides a structured way for pet owners and potential adopters to 
 ## 🌐 Live Demo
 
 https://pawconnect-frontend-ntlu.onrender.com
-👩‍💻 Author
 
 ## 🚀 Deployment
 
@@ -518,6 +524,7 @@ PawConnect is deployed using Render.
 - Frontend: Render Static Site
 - Backend: Render Web Service
 - Database: MongoDB
+👩‍💻 Author
 
 Ujwala Shetty
 
