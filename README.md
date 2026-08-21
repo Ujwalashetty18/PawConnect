@@ -446,7 +446,8 @@ Screenshots of the completed application can be added below.
 
 🏠 Home Page
 
-Add screenshot here.
+<img width="1914" height="870" alt="image" src="https://github.com/user-attachments/assets/9e64b05d-cb91-49ba-8ad6-e4cfbdf0fcef" />
+
 
 🔐 Login
 
@@ -505,8 +506,18 @@ Transparent
 User-friendly
 
 The platform provides a structured way for pet owners and potential adopters to interact through adoption requests.
+## 🌐 Live Demo
 
+https://pawconnect-frontend-ntlu.onrender.com
 👩‍💻 Author
+
+## 🚀 Deployment
+
+PawConnect is deployed using Render.
+
+- Frontend: Render Static Site
+- Backend: Render Web Service
+- Database: MongoDB
 
 Ujwala Shetty
 
